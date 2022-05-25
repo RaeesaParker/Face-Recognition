@@ -1,0 +1,16 @@
+p{
+  color:#f7f7f7;
+  margin-bottom: 2%;
+}
+
+
+.btn-dark:hover{
+  background-color: white;
+  color:black;
+}
+
+.form{
+  display: flex;
+  align-items: center;
+  width:700px;
+}

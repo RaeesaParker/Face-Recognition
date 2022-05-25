@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+  font-family: 'Courier New', 'Courier', monospace;
+  font-weight:500;
+
+  /* Comment out for particles background  */
+  background-color: yellow; 
+
+
+}
+
+
+.bolden-white{
+  text-shadow: 0.5px 0 0 #f7f7f7;
+}
+
+.bolden-pink{
+  text-shadow: 0.5px 0 0 #f1a0ae;
+}

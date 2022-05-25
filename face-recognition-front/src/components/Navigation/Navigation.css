@@ -1,0 +1,17 @@
+.navigation{
+  display: flex;
+  justify-content: flex-end;
+  vertical-align: middle;
+}
+
+
+h2{
+  color: #f1a0ae;
+}
+
+
+.position{
+  position: relative;
+  top:1rem;
+  left: -1.5rem;
+}

@@ -1,0 +1,36 @@
+
+.input-btn{
+  background-color: transparent;
+  color: #f1a0ae;
+}
+
+
+.input-btn:hover{
+  background-color: #292b2c ;
+  color:white;
+}
+
+
+.input-btn:focus{
+  background-color: #292b2c;
+  color:white;
+
+}
+
+
+
+.btn-dark:hover{
+  background-color: white;
+  color:black;
+}
+
+
+
+.box-widths{
+  width: 30%;
+}
+
+.column-widths{
+
+  width: 75%;
+}

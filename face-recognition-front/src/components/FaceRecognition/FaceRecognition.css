@@ -1,0 +1,26 @@
+.inputImage{
+  width: 500px;
+  height: auto;
+}
+
+.divBox{
+  left: 0;
+   right: 0;
+
+}
+
+
+.hide-text {
+  font-size: 0;
+}
+
+
+.bounding-box{
+  position: absolute;
+  box-shadow: 0 0 0 3px #fff inset;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  cursor: pointer;
+
+}
