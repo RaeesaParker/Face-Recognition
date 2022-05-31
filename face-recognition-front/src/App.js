@@ -1,4 +1,4 @@
-import React, {useEffect, useCallback, useMemo} from 'react';
+import React, {useEffect, useCallback, useMemo, useRef} from 'react';
 import './App.css';
 // Import components
 import Navigation from './components/Navigation/Navigation.js';
@@ -39,6 +39,9 @@ function App() {
   // Set the state of the buttonclick 
   const [click, setClick] = React.useState(false);
 
+    // Set the state of the input field 
+  const [newInput, setNewInput] = React.useState(false);
+
   // Set the state of the current user 
   const [user, setUser] = React.useState({
     id:'',
@@ -51,6 +54,8 @@ function App() {
 
   // Set the state of the current user entries 
   const [userEntries, setUserEntries] = React.useState('');
+
+
 
 
   // -------------------------------------------------- //
@@ -81,10 +86,11 @@ function App() {
   
 
   // Change this to whatever image input you want to process
-  const IMAGE_URL = imageInput;
+  const IMAGE_URL = useMemo(() => {
+    return imageInput
+  }, [imageInput])
 
-
-
+  
 
 
   // Code from Clarifai
@@ -126,6 +132,7 @@ function App() {
         displayFaceBox( calculateFaceLocation(result) ) ;
       })
       .then(setClick(false))
+      .then(setNewInput(false))
       .catch(error => console.log('error', error));
 
     }
@@ -180,28 +187,25 @@ function App() {
   // --------------------- IMAGE HANDLING ---------------------------
 
 
-  // Function to store the saved keypresses of the image link form 
+  // Function to store the saved keypresses of the image link form -
   function onInputChange (event) {
     setImageInput(event.target.value)
+    setNewInput(true)
   }
 
 
-  // //  Function to detect a click and start the Clarifai API 
-  // function onDetectClick (event) {
-  //   setImageURL(imageInput);
-  //   faceRecognitionFunction()
-  // }
-
-  
   function onDetectClick () {
     setClick(true)
   }
 
+
+  // If a click is detected AND there is a new input, run the face recognition function
   useEffect(()=>{
-    if (click === true){
+    if (click === true && newInput === true){
       faceRecognitionFunction()
     }
   }, [click])
+
 
 
 
@@ -234,9 +238,9 @@ function App() {
 
 
 
-  // Update the rank when the boxcoordinates change
+
+  // If the coordinates of the box has changed, then update the rank
   useEffect(() => {
-    console.log('Here at update rank')
     updateRank()
   }, [boxCoordinates])
 
@@ -244,8 +248,7 @@ function App() {
 
 
 
-
-  // Function to update the rank only when the Image Input has changed
+  // Function to update the rank 
   function updateRank(){
 
     try{
