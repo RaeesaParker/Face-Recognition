@@ -23,7 +23,7 @@ const onDetectClick = props.onClick
 
       <div className='center-flex'>
         <div className='form br3 shadow-2 pa2 pb3'>
-          <input type='text' className='f5 pa2 br1 w-70 centre' placeholder={'Paste URL here'} onChange={onInputChange}/>
+          <input id='inputButton' type='text' className='f5 pa2 br1 w-70 centre' placeholder={'Paste URL here'} onChange={onInputChange}/>
           <Button variant='dark' className='f5 w-30 centre grow dib bolden-white' onClick={onDetectClick} > Detect </Button>
         </div>
       </div>

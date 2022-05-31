@@ -4,7 +4,6 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import InputGroup from 'react-bootstrap/InputGroup'
 
 
 function Signin(props){
@@ -64,7 +63,7 @@ function Signin(props){
     
     // Send the sign in data to the server
     try{
-      let signInData = await fetch('http://localhost:4000/signin', {
+      await fetch('http://localhost:4000/signin', {
         method:'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -159,7 +158,7 @@ function Signin(props){
 
             {userValid === false &&
             <div className="mt1 mb3 center-flex">              
-                <p className= 'f5 red'>  E-mail or password is incorrect </p>
+                <p className= 'f5 invalid-user'>  E-mail or password is incorrect </p>
             </div>}
 
 

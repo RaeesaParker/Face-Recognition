@@ -23,6 +23,8 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const FacebookStrategy = require('passport-facebook');
 
 
+
+
 // -------------------------------------------------------
 
 // Set up packages
@@ -172,7 +174,7 @@ app.post('/register', (req,res) => {
  // Routing	 		-     PUT			
  // ---------------------------------- //
 
-app.post('/image', (req,res) => {
+app.put('/image', (req,res) => {
 
 const { id } = req.body;
 	
@@ -180,6 +182,7 @@ const { id } = req.body;
 
 	database.users.forEach(user => {
 		if (user.id === id) {
+			found = true
 			user.entries++
 			res.json(user.entries);
 		}

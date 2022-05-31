@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useCallback, useMemo} from 'react';
 import './App.css';
 // Import components
 import Navigation from './components/Navigation/Navigation.js';
@@ -27,9 +27,6 @@ function App() {
   // Set the state for the input box
   const [imageInput, setImageInput] = React.useState('');
 
-  // Set the state for the URL to be processsed by Clarifai
-  const [imageURL, setImageURL] = React.useState('');
-
   // set the state for the bounding box
   const [boxCoordinates, setBoxCoordinates] = React.useState({});
 
@@ -38,6 +35,9 @@ function App() {
 
   // Set the state to check if we are signed in or not
   const [signedIn, setSignedIn] = React.useState(false);
+
+  // Set the state of the buttonclick 
+  const [click, setClick] = React.useState(false);
 
   // Set the state of the current user 
   const [user, setUser] = React.useState({
@@ -49,7 +49,8 @@ function App() {
     joined:''
   })
 
-
+  // Set the state of the current user entries 
+  const [userEntries, setUserEntries] = React.useState('');
 
 
   // -------------------------------------------------- //
@@ -77,8 +78,13 @@ function App() {
   const APP_ID = 'ea7c94f8f6cb4875ab927985914e15a3';
   const MODEL_ID = 'face-detection';
   const MODEL_VERSION_ID = '45fb9a671625463fa646c3523a3087d5';
+  
+
   // Change this to whatever image input you want to process
   const IMAGE_URL = imageInput;
+
+
+
 
 
   // Code from Clarifai
@@ -99,7 +105,7 @@ function App() {
         }
       ]
     });
-
+    console.log('Running Face Recognition')
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -116,12 +122,13 @@ function App() {
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
 
       .then(response => response.text())
-      .then(result => {displayFaceBox( calculateFaceLocation(result) ) ;
+      .then(result => {
+        displayFaceBox( calculateFaceLocation(result) ) ;
       })
+      .then(setClick(false))
       .catch(error => console.log('error', error));
 
-  }
-
+    }
 
 
 
@@ -130,25 +137,31 @@ function App() {
   // -------------------------------------------------- //
 
 
+  // --------------------- CLARIFAI ---------------------------
+
+
   // Calculates the location of the face
   function calculateFaceLocation(data) {
     const dataObject = JSON.parse(data)
+
     const boundingBox = dataObject.outputs[0].data.regions[0].region_info.bounding_box;
 
-    // Get the height and width of the input image
-    const image = document.getElementById('inputImage');
-    const width = Number(image.width);
-    const height = Number(image.height);
-    console.log('Height and Width are - ' + height , width)
+    if (boundingBox){
 
-    // Calculate the location of the box
-    return {
-      left : (boundingBox.left_col * width) ,
-      right : width - ( boundingBox.right_col * width ),
-      topRow: boundingBox.top_row * height ,
-      bottomRow: height - ( boundingBox.bottom_row * height )
-    }
+      // Get the height and width of the input image
+      const image = document.getElementById('inputImage');
+      const width = Number(image.width);
+      const height = Number(image.height);
 
+      // Calculate the location of the box
+      return {
+        left : (boundingBox.left_col * width) ,
+        right : width - ( boundingBox.right_col * width ),
+        topRow: boundingBox.top_row * height ,
+        bottomRow: height - ( boundingBox.bottom_row * height )
+      }
+  
+    }else{console.log('ERROR')}
   };
 
 
@@ -157,25 +170,43 @@ function App() {
   //  Function to save the coordinates of the box 
   function displayFaceBox(output) {
     let outputObject = output;
-    console.log(outputObject)
     setBoxCoordinates(outputObject);
   };
 
 
 
+
+
+  // --------------------- IMAGE HANDLING ---------------------------
+
+
   // Function to store the saved keypresses of the image link form 
   function onInputChange (event) {
-    console.log(event.target.value)
     setImageInput(event.target.value)
   }
 
 
-  //  Function to detect a click and start the Clarifai API 
-  function onDetectClick (event) {
-    console.log('Detect has been clicked');
-    setImageURL(imageInput);
-    faceRecognitionFunction()
+  // //  Function to detect a click and start the Clarifai API 
+  // function onDetectClick (event) {
+  //   setImageURL(imageInput);
+  //   faceRecognitionFunction()
+  // }
+
+  
+  function onDetectClick () {
+    setClick(true)
   }
+
+  useEffect(()=>{
+    if (click === true){
+      faceRecognitionFunction()
+    }
+  }, [click])
+
+
+
+
+  // --------------------- USER FUNCTIONALITY ---------------------------
 
 
   // Function to change the route from signin/register to the home page 
@@ -189,9 +220,9 @@ function App() {
   }
 
 
+
   // Function to update the user to the current data 
   function loadUser(inputUserData){
-    console.log(inputUserData.name);
     setUser({
       id:inputUserData.id,
       name:inputUserData.name,
@@ -200,6 +231,44 @@ function App() {
       joined:inputUserData.joined
     })
   }
+
+
+
+  // Update the rank when the boxcoordinates change
+  useEffect(() => {
+    console.log('Here at update rank')
+    updateRank()
+  }, [boxCoordinates])
+
+
+
+
+
+
+  // Function to update the rank only when the Image Input has changed
+  function updateRank(){
+
+    try{
+      fetch('http://localhost:4000/image', {
+        method:'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          id: user.id,
+        })
+      })
+      // Convert the response to a JSON object
+      .then(response => { return response.json()})
+      // Assign this response to the entries in the user object
+      .then(count =>{
+        setUser(Object.assign(user, {entries:count}))
+        setUserEntries(count)
+      })
+
+    }catch(error){
+      console.log('There is an error updating the rank', error)
+    }
+  }
+
 
 
 
@@ -218,9 +287,9 @@ function App() {
       {route === 'home'
         ? <div>
           <Logo />
-          <Rank rankData={user}/>
+          <Rank userName={user.name} userRank={user.entries}/>
           <ImageLinkForm onChange={onInputChange} onClick={onDetectClick}/>
-          <FaceRecognition boxStyling={boxCoordinates} imageURL={imageURL} />
+          <FaceRecognition boxStyling={boxCoordinates} imageURL={imageInput} />
          </div>
         : ( route === 'signin'
         ?  <Signin onLoadUser={loadUser} onRouteChange={routeChange}/>

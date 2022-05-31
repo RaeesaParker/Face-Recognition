@@ -4,7 +4,9 @@ import './Rank.css'
 function Rank(props){
 
 
-const {name, entries} = props.rankData;
+const name = props.userName;
+
+const entries = props.userRank;
 
 
   return (
@@ -14,7 +16,7 @@ const {name, entries} = props.rankData;
         <p className='f4 mb3 bolden-white'>{'Hi '} {name}, {'your rank is...'} </p>
       </div>
 
-      <div>
+      <div key={entries}>
         <p className='f3 mt4 rankNum bolden-pink' >{'#'}{entries} </p>
       </div>
 
