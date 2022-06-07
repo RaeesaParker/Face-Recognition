@@ -75,7 +75,7 @@ function ParticlesBackground(){
                 default: "bounce",
               },
               random: false,
-              speed: 3,
+              speed: 1,
               straight: false,
             },
             number: {
@@ -83,7 +83,7 @@ function ParticlesBackground(){
                 enable: true,
                 area: 800,
               },
-              value: 40,
+              value: 60,
             },
             opacity: {
               value: 0.5,

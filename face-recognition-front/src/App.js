@@ -187,7 +187,7 @@ function App() {
   // --------------------- IMAGE HANDLING ---------------------------
 
 
-  // Function to store the saved keypresses of the image link form -
+  // Function to store the saved keypresses of the image link form 
   function onInputChange (event) {
     setImageInput(event.target.value)
     setNewInput(true)
@@ -282,7 +282,7 @@ function App() {
 
   return (
     <div className="App">
-       {/* <ParticlesBackground /> /*}
+       <ParticlesBackground />
       
        {/*Render the sign in page if the state of the webpage is sign in*/}
       

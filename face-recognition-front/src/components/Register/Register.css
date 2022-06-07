@@ -34,3 +34,10 @@
 
   width: 75%;
 }
+
+
+
+.invalid-user{
+  color:  #f1a0ae;
+  font-weight: bold;
+}

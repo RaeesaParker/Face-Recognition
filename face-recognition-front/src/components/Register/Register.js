@@ -37,6 +37,8 @@ function Register(props){
   //  State for form validation
   const [registerValidated, setRegisterValidated] = React.useState(false);
 
+  //  State to check if user already exists
+  const [userExists, setUserExists] = React.useState(false);
 
 
 
@@ -79,9 +81,13 @@ function Register(props){
       })
       // Convert the response to a JSON object
       .then(response => { return response.json()})
-      .then(response =>{
-        loadUser(response);
-        routeChange('home');
+      .then(user => {
+        if (user.id){
+          loadUser(user);
+          routeChange('home');
+        }else{
+          setUserExists(true)
+        }
       })
     }catch(error){
       console.log('There is an error registering the user', error)
@@ -128,7 +134,7 @@ function Register(props){
 
           <Form className="measure"  noValidate validated={registerValidated} onSubmit={handleSubmit}>
           
-            <legend className n7="f3 fw6 ph0 mh0">Register</legend>
+            <legend className="f3 fw6 ph0 mh0">Register</legend>
 
              <div className="mt3 center-flex">              
               <Row className="mb-3 column-widths ">
@@ -178,6 +184,14 @@ function Register(props){
                 </Form.Group>
                </Row>
             </div>
+
+
+
+
+            {userExists === true &&
+            <div className="mt1 mb3 center-flex">              
+                <p className= 'f5 invalid-user'>  User already exists </p>
+            </div>}
 
 
 

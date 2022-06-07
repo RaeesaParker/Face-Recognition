@@ -35,5 +35,7 @@
 }
 
 .invalid-user{
-  color:  #dc3545;
+  color:  #f1a0ae;
+  font-weight: bold;
+
 }
