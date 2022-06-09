@@ -110,6 +110,8 @@ function App() {
   // Code from Clarifai
   function faceRecognitionFunction(){
 
+    console.log('Running Face Recognition')
+
     const raw = JSON.stringify({
       "user_app_id": {
         "user_id": USER_ID,
@@ -125,7 +127,8 @@ function App() {
         }
       ]
     });
-    console.log('Running Face Recognition')
+
+    
     const requestOptions = {
       method: 'POST',
       headers: {
@@ -134,6 +137,8 @@ function App() {
       },
       body: raw
     };
+
+
 
     // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
     // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs

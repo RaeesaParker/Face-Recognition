@@ -1,6 +1,13 @@
+// Clarifai Api
+const clarifai = require('clarifai');
+
+
+// Save API keys
 
 
 
+
+// Update the rank everytime a new image is scanned - save this to the Database 
 const handleImagePut = (req,res, postgres) => {
 
 const { id } = req.body;

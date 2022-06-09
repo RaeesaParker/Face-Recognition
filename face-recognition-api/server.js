@@ -2,6 +2,12 @@
  // Including Packages			
  // ---------------------------------- //
 
+// Include Dotenv to load environments - will be used for APIs 
+require('dotenv').config()
+
+// To make GET request from backend 
+const axios = require('axios').default;
+
 // Framework
 const express = require('express');
 
