@@ -16,9 +16,9 @@ function FaceRecognition (props) {
         <img alt='Input to run face recognition on' src={imageURL} id='inputImage' className='inputImage hide-text' />
         
         {drawBox === true &&
-        <div className='bounding-box' style={{top:box.topRow, right: box.right, bottom:box.bottomRow, left:box.left}}>
-        </div>
-      }
+          <div className='bounding-box' style={{top:box.topRow, right: box.right, bottom:box.bottomRow, left:box.left}}>
+          </div>
+        }
       </div>
     </div>
   );

@@ -170,7 +170,6 @@ function App() {
 
 
     const boundingBox = dataObject.outputs[0].data.regions[0].region_info.bounding_box;
-    console.log(boundingBox)
 
     if (boundingBox){
 
