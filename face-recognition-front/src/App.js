@@ -8,9 +8,13 @@ import Rank from './components/Rank/Rank.js'
 import FaceRecognition from './components/FaceRecognition/FaceRecognition.js'
 import Signin from './components/Signin/Signin.js'
 import Register from './components/Register/Register.js'
+import Modal from './components/Modal/Modal.js'
+
 
 // Import styles and other
 import ParticlesBackground from './components/ParticlesBackground.js'
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 
 
@@ -42,6 +46,9 @@ function App() {
     // Set the state of the input field 
   const [newInput, setNewInput] = React.useState(false);
 
+  // Set the state of whether the box should be drawn
+  const [drawBox, setDrawBox] = React.useState(false);
+
   // Set the state of the current user 
   const [user, setUser] = React.useState({
     id:'',
@@ -54,6 +61,11 @@ function App() {
 
   // Set the state of the current user entries 
   const [userEntries, setUserEntries] = React.useState('');
+
+  // Set the open for the modal - to be used when there is no detection
+  const [open, setOpen] = React.useState(false);  
+
+
 
 
 
@@ -70,6 +82,8 @@ function App() {
   // };
 
 // componentDidMount()
+
+
 
 
 
@@ -133,7 +147,10 @@ function App() {
       })
       .then(setClick(false))
       .then(setNewInput(false))
-      .catch(error => console.log('error', error));
+      .catch(error => {
+        console.log('No Face has been detected', error);
+        setOpen(true);
+      });
 
     }
 
@@ -151,7 +168,9 @@ function App() {
   function calculateFaceLocation(data) {
     const dataObject = JSON.parse(data)
 
+
     const boundingBox = dataObject.outputs[0].data.regions[0].region_info.bounding_box;
+    console.log(boundingBox)
 
     if (boundingBox){
 
@@ -159,6 +178,7 @@ function App() {
       const image = document.getElementById('inputImage');
       const width = Number(image.width);
       const height = Number(image.height);
+      setDrawBox(true)
 
       // Calculate the location of the box
       return {
@@ -167,8 +187,8 @@ function App() {
         topRow: boundingBox.top_row * height ,
         bottomRow: height - ( boundingBox.bottom_row * height )
       }
-  
-    }else{console.log('ERROR')}
+    }
+
   };
 
 
@@ -191,6 +211,7 @@ function App() {
   function onInputChange (event) {
     setImageInput(event.target.value)
     setNewInput(true)
+    setDrawBox(false)
   }
 
 
@@ -209,6 +230,10 @@ function App() {
 
 
 
+  // Function to close the popup and set the state to false
+  const closeModal = () => setOpen(false);
+
+
 
   // --------------------- USER FUNCTIONALITY ---------------------------
 
@@ -219,9 +244,27 @@ function App() {
       setSignedIn(true)
     }else{
       setSignedIn(false)
+      clearUser()
     }
     setRoute(newRoute)
   }
+
+
+
+  // Function to clear all of the states when a user signs out 
+  function clearUser(){
+    setUser({
+      id:'',
+      name:'',
+      email:'',
+      password:'',
+      entries:'', 
+      joined:''
+    });
+    setImageInput('');
+    setBoxCoordinates({});
+  }
+
 
 
 
@@ -238,7 +281,6 @@ function App() {
 
 
 
-
   // If the coordinates of the box has changed, then update the rank
   useEffect(() => {
     updateRank()
@@ -246,11 +288,9 @@ function App() {
 
 
 
-
-
   // Function to update the rank 
   function updateRank(){
-
+    console.log('At updating rank')
     try{
       fetch('http://localhost:4000/image', {
         method:'PUT',
@@ -274,7 +314,6 @@ function App() {
 
 
 
-
   // -------------------------------------------------- //
   // Return
   // -------------------------------------------------- //
@@ -282,20 +321,23 @@ function App() {
 
   return (
     <div className="App">
-       <ParticlesBackground />
+      { // <ParticlesBackground />
+      }
       
        {/*Render the sign in page if the state of the webpage is sign in*/}
       
       <Navigation onRouteChange={routeChange} onSignedIn={signedIn} />
-      {route === 'home'
-        ? <div>
+      {route === 'home'? 
+        <div>
           <Logo />
           <Rank userName={user.name} userRank={user.entries}/>
           <ImageLinkForm onChange={onInputChange} onClick={onDetectClick}/>
-          <FaceRecognition boxStyling={boxCoordinates} imageURL={imageInput} />
-         </div>
-        : ( route === 'signin'
-        ?  <Signin onLoadUser={loadUser} onRouteChange={routeChange}/>
+          <FaceRecognition boxStyling={boxCoordinates} imageURL={imageInput} drawBox={drawBox}/>
+          < Modal open={open} onClose={closeModal}/>
+        </div>
+
+        : ( route === 'signin'?  
+          <Signin onLoadUser={loadUser} onRouteChange={routeChange}/>
         : <Register onLoadUser={loadUser} onRouteChange={routeChange} />
         )
        }

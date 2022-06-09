@@ -146,7 +146,7 @@ function Register(props){
                     className = 'pa2 input-reset ba input-btn f5 b '
                     onChange={onNameChange}
                   />
-                  <Form.Control.Feedback type='invalid'>Please enter your name</Form.Control.Feedback>
+                  <Form.Control.Feedback  className='invalid-user' type='invalid'>Please enter your name</Form.Control.Feedback>
                 </Form.Group>
                </Row>
             </div>
@@ -162,7 +162,7 @@ function Register(props){
                     className = 'pa2 input-reset ba input-btn f5 b '
                     onChange={onEmailChange}
                   />
-                  <Form.Control.Feedback type='invalid'>Please enter a valid email</Form.Control.Feedback>
+                  <Form.Control.Feedback  className='invalid-user' type='invalid'>Please enter a valid email</Form.Control.Feedback>
                 </Form.Group>
                </Row>
             </div>
@@ -180,7 +180,7 @@ function Register(props){
                     className = 'pa2 input-reset ba input-btn f5 b '
                     onChange={onPasswordChange}
                   />
-                  <Form.Control.Feedback type='invalid'>Please enter a password</Form.Control.Feedback>
+                  <Form.Control.Feedback  className='invalid-user' type='invalid'>Please enter a password</Form.Control.Feedback>
                 </Form.Group>
                </Row>
             </div>
