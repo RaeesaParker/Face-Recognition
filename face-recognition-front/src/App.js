@@ -92,12 +92,6 @@ function App() {
   // Clarifai
   // -------------------------------------------------- //
 
-  const USER_ID = 'db3xohvxnvya';
-  const PAT = 'e804e72eab0e4cf48156d278546272eb';
-  const APP_ID = 'ea7c94f8f6cb4875ab927985914e15a3';
-  const MODEL_ID = 'face-detection';
-  const MODEL_VERSION_ID = '45fb9a671625463fa646c3523a3087d5';
-  
 
   // Change this to whatever image input you want to process
   const IMAGE_URL = useMemo(() => {
@@ -112,40 +106,14 @@ function App() {
 
     console.log('Running Face Recognition')
 
-    const raw = JSON.stringify({
-      "user_app_id": {
-        "user_id": USER_ID,
-        "app_id": APP_ID
-      },
-      "inputs": [
-        {
-          "data": {
-            "image": {
-                "url": IMAGE_URL
-              }
-          }
-        }
-      ]
-    });
-
-    
-    const requestOptions = {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Key ' + PAT
-      },
-      body: raw
-    };
-
-
-
-    // NOTE: MODEL_VERSION_ID is optional, you can also call prediction with the MODEL_ID only
-    // https://api.clarifai.com/v2/models/{YOUR_MODEL_ID}/outputs
-    // this will default to the latest version_id
-
-    fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions)
-
+    try{
+        fetch('http://localhost:4000/clarifai', {
+        method:'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          image_url: IMAGE_URL
+        })
+      })
       .then(response => response.text())
       .then(result => {
         displayFaceBox( calculateFaceLocation(result) ) ;
@@ -156,8 +124,12 @@ function App() {
         console.log('No Face has been detected', error);
         setOpen(true);
       });
-
+    }catch(error){
+      console.log('There is an error', error)
     }
+  }
+
+
 
 
 
@@ -173,11 +145,10 @@ function App() {
   function calculateFaceLocation(data) {
     const dataObject = JSON.parse(data)
 
-
+    // Get the coordinates of the bounding box 
     const boundingBox = dataObject.outputs[0].data.regions[0].region_info.bounding_box;
 
     if (boundingBox){
-
       // Get the height and width of the input image
       const image = document.getElementById('inputImage');
       const width = Number(image.width);

@@ -1,12 +1,16 @@
- // ---------------------------------- //
- // Including Packages			
- // ---------------------------------- //
-// Check to see if this will make a different branch 
+
+// Branch => API Backend 
+
+// ---------------------------------- //
+// Including Packages			
+// ---------------------------------- //
+
+
 // Include Dotenv to load environments - will be used for APIs 
 require('dotenv').config()
 
 // To make GET request from backend 
-const axios = require('axios').default;
+const fetch = require('node-fetch')
 
 // Framework
 const express = require('express');
@@ -49,6 +53,8 @@ const register = require('./controllers/register');
 const signin = require('./controllers/signin');
 const profile = require('./controllers/profile');
 const image = require('./controllers/image');
+const clarifai = require('./controllers/clarifai');
+
 
 
 
@@ -121,6 +127,12 @@ app.get('/profile/:id', (req,res) => {profile.handleProfileGet(req, res, postgre
 
 
 
+
+
+
+
+
+
  // ---------------------------------- //
  // Routing	 		-     POST			
  // ---------------------------------- //
@@ -128,8 +140,13 @@ app.get('/profile/:id', (req,res) => {profile.handleProfileGet(req, res, postgre
 // Post for the sign in page 
 app.post('/signin', (req, res) => {signin.handleSignin(req, res, postgres, bcrypt)})
 
+
 // Post for registering a new user
 app.post('/register', (req, res) => {register.handleRegister(req, res, postgres, bcrypt, saltRounds)})
+
+
+// Post for carrying out the clarifai API call
+app.post('/clarifai', (req, res) => {clarifai.handleClarifai(req, res, fetch)})
 
 
 

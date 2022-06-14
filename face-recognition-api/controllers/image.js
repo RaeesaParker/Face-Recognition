@@ -1,9 +1,3 @@
-// Clarifai Api
-const clarifai = require('clarifai');
-
-
-// Save API keys
-
 
 
 

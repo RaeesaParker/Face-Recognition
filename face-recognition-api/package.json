@@ -10,7 +10,6 @@
   "author": "Raeesa Parker",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.0",
     "clarifai": "^2.9.1",
@@ -23,6 +22,7 @@
     "lodash": "^4.17.21",
     "mongoose": "^6.3.3",
     "mongoose-findorcreate": "^3.0.0",
+    "node-fetch": "^2.6.7",
     "passport": "^0.6.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth20": "^2.0.0",
