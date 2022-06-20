@@ -296,8 +296,8 @@ function App() {
 
   return (
     <div className="App">
-      { // <ParticlesBackground />
-      }
+       <ParticlesBackground />
+      
       
        {/*Render the sign in page if the state of the webpage is sign in*/}
       
